@@ -1,0 +1,21 @@
+﻿<Window x:Class="InvLock.LockWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InvLock"
+        xmlns:controls="clr-namespace:InvLock.Controls"
+        mc:Ignorable="d"
+        Deactivated="Window_Deactivated"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStyle="None"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        ShowInTaskbar="False"
+        Title="MainWindow" Height="Auto" Width="Auto">
+
+    <controls:OutlinedTextBlock x:Name="textBlock" Text="Lock Screen Active" Bold="True" Stroke="Red" Opacity="0" Fill="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" Font="Segoe UI" />
+</Window>
