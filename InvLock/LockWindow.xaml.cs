@@ -15,14 +15,14 @@ namespace InvLock;
 /// </summary>
 public partial class LockWindow : Window
 {
-    private const bool HideWindows = false;
     private readonly SimpleGlobalHook hook = new SimpleGlobalHook();
     private readonly Dictionary<KeyCode, DateTime> pressedKeys = [];
+    private readonly Settings settings;
     private List<IntPtr> windows = [];
     private bool isOpen = true;
     private bool suppressInput = false;
 
-    public LockWindow()
+    public LockWindow(Settings settings)
     {
         InitializeComponent();
 
@@ -42,6 +42,8 @@ public partial class LockWindow : Window
 
         Owner = w;
 
+        this.settings = settings;
+
         hook.MouseMoved += Hook_Mouse;
         hook.MouseDragged += Hook_Mouse;
         hook.MousePressed += Hook_Mouse;
@@ -59,7 +61,7 @@ public partial class LockWindow : Window
 
     private void ActivateLockScreen()
     {
-        if (HideWindows)
+        if (settings.HideWindows)
         {
             MinimizeWindows();
         }
@@ -71,7 +73,7 @@ public partial class LockWindow : Window
         {
             _ = Activate();
 
-            textBlock.Text = "Lock Screen Active";
+            textBlock.Text = settings.LockText;
             textBlock.Stroke = (Brush)FindResource("PaletteRedBrush");
 
             Animation();
@@ -120,7 +122,7 @@ public partial class LockWindow : Window
     {
         if (e.Reason == Microsoft.Win32.SessionSwitchReason.SessionUnlock)
         {
-            if (HideWindows)
+            if (settings.HideWindows)
             {
                 RestoreWindows();
             }
@@ -131,7 +133,7 @@ public partial class LockWindow : Window
 
             await Task.Delay(500);
 
-            textBlock.Text = "Lock Screen Inactive";
+            textBlock.Text = settings.UnlockText;
             textBlock.Stroke = (Brush)FindResource("PaletteGreenBrush");
 
             Animation();

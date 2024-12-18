@@ -31,15 +31,22 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Title="{Binding Title}" Grid.Row="0" />
+        <ui:TitleBar Title="{Binding Title}">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/logo.ico" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
 
-        <tray:NotifyIcon Grid.Row="0" FocusOnLeftClick="True" MenuOnRightClick="True" LeftClick="NotifyIcon_LeftClick" TooltipText="Wpf.Ui.Demo.Simple">
+        <tray:NotifyIcon Grid.Row="0" FocusOnLeftClick="True" MenuOnRightClick="True" LeftClick="NotifyIcon_LeftClick" TooltipText="{Binding AppName}">
             <tray:NotifyIcon.Menu>
                 <ContextMenu>
                     <MenuItem Header="Settings" Click="SettingsMenuItem_Click" />
                     <MenuItem Header="Quit" Click="QuitMenuItem_Click" />
                 </ContextMenu>
             </tray:NotifyIcon.Menu>
+            <tray:NotifyIcon.Icon>
+                <BitmapImage UriSource="pack://application:,,,/Assets/logo.ico" />
+            </tray:NotifyIcon.Icon>
         </tray:NotifyIcon>
 
         <ui:DynamicScrollViewer Grid.Row="1" VirtualizingPanel.ScrollUnit="Pixel">
@@ -80,21 +87,21 @@
                     <ui:CardControl.Header>
                         <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Show desktop while locked" />
                     </ui:CardControl.Header>
-                    <ui:ToggleSwitch Grid.Column="1" IsChecked="False" OffContent="Off" OnContent="On" />
+                    <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Settings.HideWindows}" OffContent="Off" OnContent="On" />
                 </ui:CardControl>
 
                 <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=LockClosed24}" Height="75">
                     <ui:CardControl.Header>
                         <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Lock text" />
                     </ui:CardControl.Header>
-                    <ui:TextBox Grid.Column="1" MinWidth="200" PlaceholderText="Lock screen active" />
+                    <ui:TextBox Grid.Column="1" MinWidth="200" Text="{Binding Settings.LockText, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Type your lock text here" />
                 </ui:CardControl>
 
                 <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=LockOpen24}" Height="75">
                     <ui:CardControl.Header>
                         <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Unlock text" />
                     </ui:CardControl.Header>
-                    <ui:TextBox Grid.Column="1" MinWidth="200" PlaceholderText="Lock screen inactive" />
+                    <ui:TextBox Grid.Column="1" MinWidth="200" Text="{Binding Settings.UnlockText, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Type your unlock text here" />
                 </ui:CardControl>
 
                 <ui:TextBlock Margin="0,24,0,8" FontTypography="BodyStrong" Text="About" />

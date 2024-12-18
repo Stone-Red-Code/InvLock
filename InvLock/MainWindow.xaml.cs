@@ -12,12 +12,13 @@ namespace InvLock;
 /// </summary>
 public partial class MainWindow : FluentWindow
 {
+    private readonly MainWindowDataContext mainWindowDataContext = new MainWindowDataContext();
     private LockWindow? lockWindow;
     private bool blockWindowClosing = true;
 
     public MainWindow()
     {
-        DataContext = new MainWindowDataContext();
+        DataContext = mainWindowDataContext;
 
         InitializeComponent();
 
@@ -51,7 +52,7 @@ public partial class MainWindow : FluentWindow
     {
         Close();
 
-        lockWindow = new LockWindow();
+        lockWindow = new LockWindow(mainWindowDataContext.Settings);
         lockWindow.Show();
     }
 
@@ -62,6 +63,8 @@ public partial class MainWindow : FluentWindow
 
     private void FluentWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
+        mainWindowDataContext.Settings.Save();
+
         if (blockWindowClosing)
         {
             e.Cancel = true;

@@ -1,16 +1,22 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
 
 namespace InvLock.DataContexts;
 
-internal class MainWindowDataContext
+internal class MainWindowDataContext : INotifyPropertyChanged
 {
 #if DEBUG
     public string Title => $"{App.AppName} - Dev {AppVersion}";
 #else
-   public string Title => $"{App.AppName} - {AppVersion}";
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Title => $"{App.AppName} - {AppVersion}";
 #endif
 
     public string AppName => App.AppName;
 
     public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown";
+
+    public Settings Settings { get; } = Settings.Load();
 }

@@ -7,13 +7,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="icon.ico" />
+  </ItemGroup>
+    
   <ItemGroup>
     <PackageReference Include="CuteUtils" Version="1.0.0" />
     <PackageReference Include="SharpHook" Version="5.3.8" />
     <PackageReference Include="WPF-UI" Version="3.0.5" />
     <PackageReference Include="WPF-UI.Tray" Version="3.0.5" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <Resource Include="Assets\logo.ico" />
   </ItemGroup>
 
 </Project>
