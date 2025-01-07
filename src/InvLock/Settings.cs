@@ -3,6 +3,8 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
+using Wpf.Ui.Appearance;
+
 namespace InvLock;
 
 public class Settings : INotifyPropertyChanged
@@ -12,6 +14,7 @@ public class Settings : INotifyPropertyChanged
     private static readonly string settingsPath = Path.Combine(App.ApplicationDataPath, "settings.json");
     private bool hideWindows = false;
     private string lockText = "Lock Screen Active";
+    private string theme = "Windows default";
 
     private string unlockText = "Lock Screen Inactive";
 
@@ -41,6 +44,30 @@ public class Settings : INotifyPropertyChanged
         set
         {
             unlockText = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string Theme
+    {
+        get => theme;
+        set
+        {
+            theme = value;
+
+            if (value == "Windows default")
+            {
+                ApplicationThemeManager.ApplySystemTheme();
+            }
+            else if (value == "Light")
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            }
+            else if (value == "Dark")
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+            }
+
             OnPropertyChanged();
         }
     }

@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace InvLock.DataContexts;
 
-internal class MainWindowDataContext : INotifyPropertyChanged
+internal class MainWindowDataContext
 {
 #if DEBUG
     public string Title => $"{App.AppName} - Dev {AppVersion}";

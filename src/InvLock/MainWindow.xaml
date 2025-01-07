@@ -76,7 +76,7 @@
                             </ui:HyperlinkButton>
                         </Grid>
                     </ui:CardControl.Header>
-                    <ComboBox Grid.Column="1" MinWidth="200" SelectedIndex="0">
+                    <ComboBox Grid.Column="1" MinWidth="200" SelectedIndex="0" SelectedValue="{Binding Settings.Theme}" SelectedValuePath="Content">
                         <ComboBoxItem Content="Windows default" />
                         <ComboBoxItem Content="Light" />
                         <ComboBoxItem Content="Dark" />
@@ -129,7 +129,26 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Report an issue or request a feature" />
-                                <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ui:SymbolIcon Margin="0 0 6 0" Symbol="Link24" />
+                                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="https://github.com/Stone-Red-Code/InvLock/issues"/>
+                                </StackPanel>
+                            </Grid>
+                        </ui:Anchor>
+
+                        <Separator />
+
+                        <ui:Anchor Margin="0" Padding="16" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent" CornerRadius="0" BorderThickness="0" NavigateUri="https://github.com/Stone-Red-Code/InvLock">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="GitHub" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ui:SymbolIcon Margin="0 0 6 0" Symbol="Link24" />
+                                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="https://github.com/Stone-Red-Code/InvLock"/>
+                                </StackPanel>
                             </Grid>
                         </ui:Anchor>
 
@@ -140,13 +159,9 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Clone repository" />
-                            <TextBlock Grid.Column="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="git clone https://github.com/Stone-Red-Code/InvLock" />
+                            <TextBlock Grid.Column="0" Text="Version" />
+                            <TextBlock Grid.Column="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="{Binding AppVersion}"/>
                         </Grid>
-
-                        <Separator />
-
-                        <TextBlock Margin="16" Text="{Binding AppVersion, StringFormat='Version {0}'}" />
                     </StackPanel>
                 </ui:CardExpander>
             </StackPanel>
