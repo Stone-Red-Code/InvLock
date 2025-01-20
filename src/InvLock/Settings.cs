@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
+﻿using SharpHook.Native;
+
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using Wpf.Ui.Appearance;
 
@@ -12,9 +15,12 @@ public class Settings : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private static readonly string settingsPath = Path.Combine(App.ApplicationDataPath, "settings.json");
+    private bool useWindowsLockScreen = true;
     private bool hideWindows = false;
     private string lockText = "Lock Screen Active";
     private string theme = "Windows default";
+    private HashSet<KeyCode> lockShortcut = [KeyCode.VcLeftControl, KeyCode.VcLeftShift, KeyCode.VcL];
+    private HashSet<KeyCode> unlockShortcut = [KeyCode.VcLeftControl, KeyCode.VcLeftShift, KeyCode.VcL];
 
     private string unlockText = "Lock Screen Inactive";
 
@@ -24,6 +30,16 @@ public class Settings : INotifyPropertyChanged
         set
         {
             hideWindows = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool UseWindowsLockScreen
+    {
+        get => useWindowsLockScreen;
+        set
+        {
+            useWindowsLockScreen = value;
             OnPropertyChanged();
         }
     }
@@ -38,6 +54,20 @@ public class Settings : INotifyPropertyChanged
         }
     }
 
+    public HashSet<KeyCode> LockShortcut
+    {
+        get => lockShortcut;
+        set
+        {
+            lockShortcut = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(LockShortcutText));
+        }
+    }
+
+    [JsonIgnore]
+    public string LockShortcutText => string.Join(" + ", LockShortcut.Select(key => key.ToString()[2..]));
+
     public string UnlockText
     {
         get => unlockText;
@@ -47,6 +77,20 @@ public class Settings : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
+
+    public HashSet<KeyCode> UnlockShortcut
+    {
+        get => unlockShortcut;
+        set
+        {
+            unlockShortcut = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(UnlockShortcutText));
+        }
+    }
+
+    [JsonIgnore]
+    public string UnlockShortcutText => string.Join(" + ", UnlockShortcut.Select(key => key.ToString()[2..]));
 
     public string Theme
     {
@@ -76,10 +120,16 @@ public class Settings : INotifyPropertyChanged
     {
         if (File.Exists(settingsPath))
         {
-            string json = File.ReadAllText(settingsPath);
-            return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+            try
+            {
+                string json = File.ReadAllText(settingsPath);
+                return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+            }
+            catch (JsonException)
+            {
+                return new Settings();
+            }
         }
-
         return new Settings();
     }
 

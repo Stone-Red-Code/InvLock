@@ -3,6 +3,7 @@
 using SharpHook;
 using SharpHook.Native;
 
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -59,6 +60,59 @@ public partial class LockWindow : Window
         _ = Task.Run(hook.Run);
     }
 
+    public async Task<HashSet<KeyCode>?> RecordShortcut()
+    {
+        HashSet<KeyCode> keys = [];
+
+        hook.KeyPressed -= Hook_KeyPressed;
+        hook.KeyPressed += Record;
+
+        textBlock.Text = "Press a key combination to record a shortcut";
+        textBlock.Stroke = Brushes.White;
+        textBlock.Opacity = 1;
+
+        // Wait for the user to press the enter key
+        await Task.Run(async () =>
+        {
+            while (!keys.Contains(KeyCode.VcEnter) && !keys.Contains(KeyCode.VcEscape))
+            {
+                await Task.Delay(100);
+            }
+        });
+
+        hook.KeyPressed -= Record;
+        hook.KeyPressed += Hook_KeyPressed;
+
+        textBlock.Opacity = 0;
+
+        if (keys.Contains(KeyCode.VcEscape) || keys.Count <= 1)
+        {
+            textBlock.Text = "Shortcut Recording Cancelled";
+            textBlock.Stroke = (Brush)FindResource("PaletteRedBrush");
+            Animation();
+
+            return null;
+        }
+
+        textBlock.Text = "Shortcut Recorded";
+        textBlock.Stroke = (Brush)FindResource("PaletteGreenBrush");
+        Animation();
+
+        _ = keys.Remove(KeyCode.VcEnter);
+
+        return keys;
+
+        void Record(object? sender, KeyboardHookEventArgs e)
+        {
+            e.SuppressEvent = true;
+            _ = keys.Add(e.Data.KeyCode);
+            Debug.WriteLine(string.Join(" + ", keys.Select(key => key.ToString())));
+            _ = Dispatcher.Invoke(() => textBlock.Text = string.Join(" + ", keys.Select(key => key.ToString()[2..]))
+            + Environment.NewLine
+            + "Press ENTER to save or ESCAPE to cancel");
+        }
+    }
+
     private void ActivateLockScreen()
     {
         if (settings.HideWindows)
@@ -82,8 +136,30 @@ public partial class LockWindow : Window
 
     private void DeactivateLockScreen()
     {
-        isOpen = false;
-        Dispatcher.Invoke(Close);
+        if (settings.UseWindowsLockScreen)
+        {
+            isOpen = false;
+
+            Dispatcher.Invoke(Close);
+        }
+        else
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (settings.HideWindows)
+                {
+                    RestoreWindows();
+                }
+
+                textBlock.Text = settings.UnlockText;
+                textBlock.Stroke = (Brush)FindResource("PaletteGreenBrush");
+
+                Animation();
+
+                isOpen = true;
+                suppressInput = false;
+            });
+        }
     }
 
     private void Hook_KeyPressed(object? sender, KeyboardHookEventArgs e)
@@ -97,16 +173,13 @@ public partial class LockWindow : Window
         }
         _ = pressedKeys[e.Data.KeyCode] = DateTime.UtcNow;
 
-        if (pressedKeys.ContainsKey(KeyCode.VcL) && pressedKeys.ContainsKey(KeyCode.VcLeftShift) && pressedKeys.ContainsKey(KeyCode.VcLeftControl) && pressedKeys.Count == 3)
+        if (pressedKeys.All(kvp => settings.UnlockShortcut.Contains(kvp.Key)) && suppressInput && pressedKeys.Count == settings.UnlockShortcut.Count)
         {
-            if (suppressInput)
-            {
-                DeactivateLockScreen();
-            }
-            else
-            {
-                ActivateLockScreen();
-            }
+            DeactivateLockScreen();
+        }
+        else if (pressedKeys.All(kvp => settings.LockShortcut.Contains(kvp.Key)) && !suppressInput && pressedKeys.Count == settings.LockShortcut.Count)
+        {
+            ActivateLockScreen();
         }
 
         e.SuppressEvent = suppressInput;
@@ -171,7 +244,11 @@ public partial class LockWindow : Window
 
     private void Animation()
     {
-        Storyboard storyboard = new Storyboard();
+        Storyboard storyboard = new Storyboard
+        {
+            FillBehavior = FillBehavior.Stop
+        };
+
         TimeSpan duration = TimeSpan.FromMilliseconds(500);
 
         DoubleAnimation fadeInAnimation = new DoubleAnimation()

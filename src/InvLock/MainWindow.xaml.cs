@@ -12,12 +12,13 @@ namespace InvLock;
 /// </summary>
 public partial class MainWindow : FluentWindow
 {
-    private readonly MainWindowDataContext mainWindowDataContext = new MainWindowDataContext();
+    private readonly MainWindowDataContext mainWindowDataContext;
     private LockWindow? lockWindow;
     private bool blockWindowClosing = true;
 
     public MainWindow()
     {
+        mainWindowDataContext = new MainWindowDataContext(() => lockWindow);
         DataContext = mainWindowDataContext;
 
         InitializeComponent();
