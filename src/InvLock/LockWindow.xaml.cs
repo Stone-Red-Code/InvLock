@@ -146,18 +146,19 @@ public partial class LockWindow : Window
         {
             Dispatcher.Invoke(() =>
             {
+                suppressInput = false;
+
                 if (settings.HideWindows)
                 {
                     RestoreWindows();
                 }
 
+                isOpen = true;
+
                 textBlock.Text = settings.UnlockText;
                 textBlock.Stroke = (Brush)FindResource("PaletteGreenBrush");
 
                 Animation();
-
-                isOpen = true;
-                suppressInput = false;
             });
         }
     }
