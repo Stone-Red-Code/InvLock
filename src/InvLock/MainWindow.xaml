@@ -56,10 +56,6 @@
                     It is designed to be lightweight and easy to use.
                     <LineBreak />
                     If you have any issues or feature requests, please report them on GitHub.
-                    <LineBreak />
-                    <LineBreak />
-                    To lock and unlock your screen, press
-                    <ui:TextBlock Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}">WIN + SHIFT + L</ui:TextBlock>
                 </ui:TextBlock>
 
                 <ui:TextBlock Margin="0,0,0,8" FontTypography="BodyStrong" Text="Appearance &amp; behavior" />
@@ -76,7 +72,7 @@
                             </ui:HyperlinkButton>
                         </Grid>
                     </ui:CardControl.Header>
-                    <ComboBox Grid.Column="1" MinWidth="200" SelectedIndex="0">
+                    <ComboBox Grid.Column="1" MinWidth="200" SelectedIndex="0" SelectedValue="{Binding Settings.Theme}" SelectedValuePath="Content">
                         <ComboBoxItem Content="Windows default" />
                         <ComboBoxItem Content="Light" />
                         <ComboBoxItem Content="Dark" />
@@ -90,6 +86,13 @@
                     <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Settings.HideWindows}" OffContent="Off" OnContent="On" />
                 </ui:CardControl>
 
+                <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=WindowShield24}" Height="75">
+                    <ui:CardControl.Header>
+                        <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Use windows lock screen to unlock" />
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Settings.UseWindowsLockScreen}" OffContent="Off" OnContent="On" />
+                </ui:CardControl>
+
                 <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=LockClosed24}" Height="75">
                     <ui:CardControl.Header>
                         <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Lock text" />
@@ -97,11 +100,25 @@
                     <ui:TextBox Grid.Column="1" MinWidth="200" Text="{Binding Settings.LockText, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Type your lock text here" />
                 </ui:CardControl>
 
+                <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=LockClosed24}" Height="75">
+                    <ui:CardControl.Header>
+                        <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Lock shortcut" />
+                    </ui:CardControl.Header>
+                    <ui:Button Grid.Column="1" Command="{Binding RecordLockShortcutCommand}" MinWidth="200" Icon="{ui:SymbolIcon Symbol=Edit24}" Content="{Binding Settings.LockShortcutText}" />
+                </ui:CardControl>
+
                 <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=LockOpen24}" Height="75">
                     <ui:CardControl.Header>
                         <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Unlock text" />
                     </ui:CardControl.Header>
                     <ui:TextBox Grid.Column="1" MinWidth="200" Text="{Binding Settings.UnlockText, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Type your unlock text here" />
+                </ui:CardControl>
+
+                <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=LockOpen24}" Height="75">
+                    <ui:CardControl.Header>
+                        <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Unlock shortcut" />
+                    </ui:CardControl.Header>
+                    <ui:Button Grid.Column="1" Command="{Binding RecordUnlockShortcutCommand}" MinWidth="200" Icon="{ui:SymbolIcon Symbol=Edit24}" Content="{Binding Settings.UnlockShortcutText}" />
                 </ui:CardControl>
 
                 <ui:TextBlock Margin="0,24,0,8" FontTypography="BodyStrong" Text="About" />
@@ -129,7 +146,26 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Report an issue or request a feature" />
-                                <ui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ui:SymbolIcon Margin="0 0 6 0" Symbol="Link24" />
+                                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="https://github.com/Stone-Red-Code/InvLock/issues" />
+                                </StackPanel>
+                            </Grid>
+                        </ui:Anchor>
+
+                        <Separator />
+
+                        <ui:Anchor Margin="0" Padding="16" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent" CornerRadius="0" BorderThickness="0" NavigateUri="https://github.com/Stone-Red-Code/InvLock">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="GitHub" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ui:SymbolIcon Margin="0 0 6 0" Symbol="Link24" />
+                                    <TextBlock Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="https://github.com/Stone-Red-Code/InvLock" />
+                                </StackPanel>
                             </Grid>
                         </ui:Anchor>
 
@@ -140,13 +176,9 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Clone repository" />
-                            <TextBlock Grid.Column="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="git clone https://github.com/Stone-Red-Code/InvLock" />
+                            <TextBlock Grid.Column="0" Text="Version" />
+                            <TextBlock Grid.Column="1" Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}" Text="{Binding AppVersion}" />
                         </Grid>
-
-                        <Separator />
-
-                        <TextBlock Margin="16" Text="{Binding AppVersion, StringFormat='Version {0}'}" />
                     </StackPanel>
                 </ui:CardExpander>
             </StackPanel>

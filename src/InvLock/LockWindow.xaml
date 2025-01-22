@@ -17,5 +17,7 @@
         ShowInTaskbar="False"
         Title="MainWindow" Height="Auto" Width="Auto">
 
-    <controls:OutlinedTextBlock x:Name="textBlock" Text="Lock Screen Active" Bold="True" Stroke="Red" Opacity="0" Fill="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" Font="Segoe UI" />
+    <Viewbox Stretch="Uniform" StretchDirection="DownOnly">
+        <controls:OutlinedTextBlock x:Name="textBlock" Text="Lock Screen Active" Bold="True" Stroke="Red" Opacity="0" Fill="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" Font="Segoe UI" />
+    </Viewbox>
 </Window>
