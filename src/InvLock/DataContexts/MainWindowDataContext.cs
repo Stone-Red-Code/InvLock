@@ -11,9 +11,6 @@ internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccesso
 #if DEBUG
     public string Title => $"{App.AppName} - Dev {AppVersion}";
 #else
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public string Title => $"{App.AppName} - {AppVersion}";
 #endif
 
