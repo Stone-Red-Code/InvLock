@@ -10,7 +10,7 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
 {
     #region Private Fields
 
-    private Geometry _textGeometry;
+    private Geometry? _textGeometry;
 
     #endregion Private Fields
 
@@ -38,12 +38,12 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
         FontStyle fontStyle = FontStyles.Normal;
         FontWeight fontWeight = FontWeights.Medium;
 
-        if (Bold == true)
+        if (Bold)
         {
             fontWeight = FontWeights.Bold;
         }
 
-        if (Italic == true)
+        if (Italic)
         {
             fontStyle = FontStyles.Italic;
         }
@@ -55,13 +55,12 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
             FlowDirection.LeftToRight,
             new Typeface(Font, fontStyle, fontWeight, FontStretches.Normal),
             FontSize,
-            Brushes.Black // This brush does not matter since we use the geometry of the text.
-            );
+            Brushes.Black, // This brush does not matter since we use the geometry of the text.
+            1);
 
         // Build the geometry object that represents the text.
         _textGeometry = formattedText.BuildGeometry(new Point(0, 0));
 
-        //set the size of the custome control based on the size of the text
         MinWidth = formattedText.Width;
         MinHeight = formattedText.Height;
     }
@@ -73,7 +72,6 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
     protected override void OnRender(DrawingContext drawingContext)
     {
         CreateText();
-        // Draw the outline based on the properties that are set.
         drawingContext.DrawGeometry(Fill, new Pen(Stroke, StrokeThickness), _textGeometry);
     }
 
@@ -252,7 +250,7 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
     }
 
     /// <summary>
-    /// Specifies the brush to use for the stroke and optional hightlight of the formatted text.
+    /// Specifies the brush to use for the stroke and optional highlight of the formatted text.
     /// </summary>
     public Brush Stroke
     {
@@ -262,7 +260,7 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
     }
 
     /// <summary>
-    ///     The stroke thickness of the font.
+    /// The stroke thickness of the font.
     /// </summary>
     public ushort StrokeThickness
     {
@@ -285,9 +283,9 @@ public class OutlinedTextBlock : FrameworkElement, IAddChild
     {
     }
 
-    public void AddText(string value)
+    public void AddText(string text)
     {
-        Text = value;
+        Text = text;
     }
 
     #endregion DependencyProperties
