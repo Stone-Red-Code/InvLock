@@ -14,7 +14,8 @@
 
 ## Preview
 
-<Preview Images>
+![Screenshot 2025-02-14 184822](https://github.com/user-attachments/assets/145243af-a210-41b5-8053-4dcaa46df354)
+![Screenshot 2025-02-14 185010](https://github.com/user-attachments/assets/e57f3f58-50bd-45a6-82e5-413c6874ca0b)
 
 ## Third party licenses
 
