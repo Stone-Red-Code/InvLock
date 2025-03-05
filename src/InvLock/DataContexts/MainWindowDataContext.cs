@@ -22,7 +22,7 @@ internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccesso
 
     public string AppName => App.AppName;
 
-    public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown";
+    public string AppVersion => Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
 
     public Settings Settings { get; } = Settings.Load();
 
