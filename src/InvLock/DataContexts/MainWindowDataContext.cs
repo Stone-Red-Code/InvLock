@@ -1,13 +1,19 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
+using InvLock.Utilities;
+
 using SharpHook.Native;
 
+using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace InvLock.DataContexts;
 
-internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccessor)
+internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccessor) : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
 #if DEBUG
     public string Title => $"{App.AppName} - Dev {AppVersion}";
 #else
@@ -19,6 +25,24 @@ internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccesso
     public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown";
 
     public Settings Settings { get; } = Settings.Load();
+
+    public bool IsAutoStartEnabled
+    {
+        get => StartupManager.IsAutoStartEnabled();
+        set
+        {
+            if (value)
+            {
+                _ = StartupManager.EnableAutoStart();
+            }
+            else
+            {
+                _ = StartupManager.DisableAutoStart();
+            }
+
+            OnPropertyChanged();
+        }
+    }
 
     [RelayCommand]
     public async Task RecordLockShortcut()
@@ -54,5 +78,10 @@ internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccesso
         {
             Settings.UnlockShortcut = unlockShortcut;
         }
+    }
+
+    protected void OnPropertyChanged([CallerMemberName] string? name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
