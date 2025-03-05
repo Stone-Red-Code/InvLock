@@ -71,6 +71,7 @@ public partial class MainWindow : FluentWindow
             e.Cancel = true;
 
             ShowInTaskbar = false;
+            WindowState = WindowState.Minimized;
             Visibility = Visibility.Collapsed;
         }
     }

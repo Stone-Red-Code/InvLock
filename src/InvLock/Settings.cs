@@ -17,6 +17,7 @@ public class Settings : INotifyPropertyChanged
     private static readonly string settingsPath = Path.Combine(App.ApplicationDataPath, "settings.json");
     private bool useWindowsLockScreen = true;
     private bool hideWindows = false;
+    private bool blurScreen = false;
     private string lockText = "Lock Screen Active";
     private string theme = "Windows default";
     private HashSet<KeyCode> lockShortcut = [KeyCode.VcLeftControl, KeyCode.VcLeftShift, KeyCode.VcL];
@@ -30,6 +31,16 @@ public class Settings : INotifyPropertyChanged
         set
         {
             hideWindows = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool BlurScreen
+    {
+        get => blurScreen;
+        set
+        {
+            blurScreen = value;
             OnPropertyChanged();
         }
     }

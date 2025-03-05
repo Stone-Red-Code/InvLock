@@ -19,7 +19,9 @@ public partial class LockWindow : Window
     private readonly SimpleGlobalHook hook = new SimpleGlobalHook();
     private readonly Dictionary<KeyCode, DateTime> pressedKeys = [];
     private readonly Settings settings;
+    private readonly List<BlurWindow> blurWindows = [];
     private List<IntPtr> windows = [];
+    private Point lastMousePosition;
     private bool isOpen = true;
     private bool suppressInput = false;
 
@@ -120,11 +122,32 @@ public partial class LockWindow : Window
             MinimizeWindows();
         }
 
-        isOpen = true;
-        suppressInput = true;
-
         Dispatcher.Invoke(() =>
         {
+            lastMousePosition = WpfScreenHelper.MouseHelper.MousePosition;
+
+            if (settings.BlurScreen)
+            {
+                foreach (Rect bounds in WpfScreenHelper.Screen.AllScreens.Select(s => s.WpfBounds))
+                {
+                    BlurWindow blurWindow = new()
+                    {
+                        Width = bounds.Width,
+                        Height = bounds.Height,
+                        Left = bounds.Left,
+                        Top = bounds.Top,
+                    };
+
+                    blurWindows.Add(blurWindow);
+                    blurWindow.Show();
+                }
+
+                _ = WindowsApi.SetCursorPosition(new Point(100000, 100000));
+            }
+
+            isOpen = true;
+            suppressInput = true;
+
             _ = Activate();
 
             textBlock.Text = settings.LockText;
@@ -154,6 +177,9 @@ public partial class LockWindow : Window
                 }
 
                 isOpen = true;
+
+                _ = WindowsApi.SetCursorPosition(lastMousePosition);
+                blurWindows.ForEach(w => w.Close());
 
                 textBlock.Text = settings.UnlockText;
                 textBlock.Stroke = (Brush)FindResource("PaletteGreenBrush");
@@ -202,6 +228,9 @@ public partial class LockWindow : Window
             }
 
             isOpen = true;
+
+            _ = WindowsApi.SetCursorPosition(lastMousePosition);
+            blurWindows.ForEach(w => w.Close());
 
             _ = Activate();
 

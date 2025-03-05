@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace InvLock.Utilities;
 
@@ -70,11 +72,45 @@ public static class WindowsApi
         _ = ShowWindow(hWnd, show ? SW_SHOW : SW_HIDE);
     }
 
+    public static bool SetCursorPosition(Point point)
+    {
+        return SetCursorPos((int)point.X, (int)point.Y);
+    }
+
+    public static void EnableBlur(Window window)
+    {
+        WindowInteropHelper windowHelper = new WindowInteropHelper(window);
+
+        AccentPolicy accent = new AccentPolicy
+        {
+            AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
+        };
+
+        int accentStructSize = Marshal.SizeOf(accent);
+
+        nint accentPtr = Marshal.AllocHGlobal(accentStructSize);
+        Marshal.StructureToPtr(accent, accentPtr, false);
+
+        WindowCompositionAttributeData data = new WindowCompositionAttributeData
+        {
+            Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
+            SizeOfData = accentStructSize,
+            Data = accentPtr
+        };
+
+        _ = SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+
+        Marshal.FreeHGlobal(accentPtr);
+    }
+
     [DllImport("user32.dll")]
     internal static extern bool LockWorkStation();
 
     [DllImport("user32.dll")]
     internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll")]
+    internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
     [DllImport("user32.dll")]
     private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
@@ -102,4 +138,41 @@ public static class WindowsApi
 
     [DllImport("user32.dll")]
     private static extern bool IsIconic(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetCursorPos(int x, int y);
+
+    internal enum AccentState
+    {
+        ACCENT_DISABLED = 1,
+        ACCENT_ENABLE_GRADIENT = 0,
+        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
+        ACCENT_ENABLE_BLURBEHIND = 3,
+        ACCENT_INVALID_STATE = 4
+    }
+
+    internal enum WindowCompositionAttribute
+    {
+        // ...
+        WCA_ACCENT_POLICY = 19
+
+        // ...
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public int AccentFlags;
+        public int GradientColor;
+        public int AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttribute Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
+    }
 }

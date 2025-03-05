@@ -79,11 +79,32 @@
                     </ComboBox>
                 </ui:CardControl>
 
+                <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=Clock24}" Height="75">
+                    <ui:CardControl.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Run at startup" />
+                            <ui:TextBlock Grid.Row="1" Foreground="{ui:ThemeResource TextFillColorTertiaryBrush}" FontSize="12" Text="Start InvLock when you sign in to Windows" />
+                        </Grid>
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding IsAutoStartEnabled}" OffContent="Off" OnContent="On" />
+                </ui:CardControl>
+
                 <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=Window24}" Height="75">
                     <ui:CardControl.Header>
                         <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Show desktop while locked" />
                     </ui:CardControl.Header>
                     <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Settings.HideWindows}" OffContent="Off" OnContent="On" />
+                </ui:CardControl>
+
+                <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=Blur24}" Height="75">
+                    <ui:CardControl.Header>
+                        <ui:TextBlock Grid.Row="0" FontTypography="Body" Text="Blur screen while locked" />
+                    </ui:CardControl.Header>
+                    <ui:ToggleSwitch Grid.Column="1" IsChecked="{Binding Settings.BlurScreen}" OffContent="Off" OnContent="On" />
                 </ui:CardControl>
 
                 <ui:CardControl Margin="0,0,0,12" Icon="{ui:SymbolIcon Symbol=WindowShield24}" Height="75">
