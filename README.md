@@ -3,7 +3,7 @@
 ## Usage
 
 1. Download & install the latest release
-   - Microsoft Store: [Store Page (Coming Soon)](https://www.microsoft.com/store/apps)
+   - Microsoft Store: [Store Page](https://apps.microsoft.com/detail/9P5ZXZQJRK4H?hl=en-us&gl=AT&ocid=pdpshare)
    - GitHub: [Releases](https://github.com/Stone-Red-Code/InvLock/releases)
 2. (Optional) Put a shortcut to the `InvLock.exe` file in the installation directory into the `shell:startup` directory.
 3. Start the app and configure the settings to your liking.
