@@ -140,6 +140,7 @@ public partial class LockWindow : Window
 
                     blurWindows.Add(blurWindow);
                     blurWindow.Show();
+                    _ = blurWindow.Activate();
                 }
 
                 _ = WindowsApi.SetCursorPosition(new Point(100000, 100000));
