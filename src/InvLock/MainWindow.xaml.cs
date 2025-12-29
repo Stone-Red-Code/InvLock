@@ -51,8 +51,6 @@ public partial class MainWindow : FluentWindow
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        Close();
-
         lockWindow = new LockWindow(mainWindowDataContext.Settings);
         lockWindow.Show();
     }
