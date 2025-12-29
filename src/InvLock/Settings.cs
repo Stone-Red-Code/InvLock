@@ -20,6 +20,7 @@ public class Settings : INotifyPropertyChanged
     private bool blurScreen = false;
     private string lockText = "Lock Screen Active";
     private string theme = "Windows default";
+    private bool firstRun = true;
     private HashSet<KeyCode> lockShortcut = [KeyCode.VcLeftControl, KeyCode.VcLeftShift, KeyCode.VcL];
     private HashSet<KeyCode> unlockShortcut = [KeyCode.VcLeftControl, KeyCode.VcLeftShift, KeyCode.VcL];
 
@@ -73,6 +74,16 @@ public class Settings : INotifyPropertyChanged
             lockShortcut = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(LockShortcutText));
+        }
+    }
+
+    public bool FirstRun
+    {
+        get => firstRun;
+        set
+        {
+            firstRun = value;
+            OnPropertyChanged();
         }
     }
 

@@ -122,7 +122,7 @@ public partial class LockWindow : Window
             MinimizeWindows();
         }
 
-        Dispatcher.Invoke(() =>
+        _ = Dispatcher.Invoke(async () =>
         {
             lastMousePosition = WpfScreenHelper.MouseHelper.MousePosition;
 
@@ -136,11 +136,13 @@ public partial class LockWindow : Window
                         Height = bounds.Height,
                         Left = bounds.Left,
                         Top = bounds.Top,
+                        Topmost = true
                     };
 
                     blurWindows.Add(blurWindow);
                     blurWindow.Show();
-                    _ = blurWindow.Activate();
+
+                    blurWindow.Topmost = false;
                 }
 
                 _ = WindowsApi.SetCursorPosition(new Point(100000, 100000));

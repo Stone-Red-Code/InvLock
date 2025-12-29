@@ -18,12 +18,12 @@ public partial class MainWindow : FluentWindow
 
     public MainWindow()
     {
+        SystemThemeWatcher.Watch(this);
+
         mainWindowDataContext = new MainWindowDataContext(() => lockWindow);
         DataContext = mainWindowDataContext;
 
         InitializeComponent();
-
-        SystemThemeWatcher.Watch(this);
     }
 
     internal void RestoreWindow()
@@ -53,6 +53,18 @@ public partial class MainWindow : FluentWindow
     {
         lockWindow = new LockWindow(mainWindowDataContext.Settings);
         lockWindow.Show();
+
+        if (mainWindowDataContext.Settings.FirstRun)
+        {
+            mainWindowDataContext.Settings.FirstRun = false;
+            RestoreWindow();
+        }
+        else
+        {
+            ShowInTaskbar = false;
+            WindowState = WindowState.Minimized;
+            Visibility = Visibility.Collapsed;
+        }
     }
 
     private void NotifyIcon_LeftClick(Wpf.Ui.Tray.Controls.NotifyIcon sender, RoutedEventArgs e)

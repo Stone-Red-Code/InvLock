@@ -5,6 +5,7 @@ using InvLock.Utilities;
 using SharpHook.Native;
 
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -22,7 +23,15 @@ internal partial class MainWindowDataContext(Func<LockWindow?> lockWindowAccesso
 
     public string AppName => App.AppName;
 
-    public string AppVersion => Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "Unknown";
+    public string AppVersion
+    {
+        get
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fileVersionInfo.ProductVersion ?? "Unknown";
+        }
+    }
 
     public Settings Settings { get; } = Settings.Load();
 

@@ -18,8 +18,6 @@
     WindowBackdropType="Mica"
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
-    WindowState="Minimized"
-    ShowInTaskbar="False"
     Loaded="Window_Loaded"
     Closing="FluentWindow_Closing"
     Closed="FluentWindow_Closed"
